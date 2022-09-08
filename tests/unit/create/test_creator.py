@@ -26,6 +26,7 @@ from virtualenv.create.via_global_ref.builtin.cpython.cpython2 import CPython2Po
 from virtualenv.create.via_global_ref.builtin.cpython.cpython3 import CPython3Posix
 from virtualenv.create.via_global_ref.builtin.python2.python2 import Python2
 from virtualenv.discovery.py_info import PythonInfo
+from virtualenv.discovery.builtin import get_interpreter
 from virtualenv.info import IS_PYPY, IS_WIN, fs_is_case_sensitive
 from virtualenv.run import cli_run, session_via_cli
 
@@ -636,6 +637,7 @@ def test_python_path(monkeypatch, tmp_path, python_path_on):
         assert base == extra_all
 
 
+@pytest.mark.skipif(get_interpreter("2.7", []) is None, reason="No 2.7 interpreter installed")
 @pytest.mark.parametrize(
     ("py", "pyc"),
     product(
