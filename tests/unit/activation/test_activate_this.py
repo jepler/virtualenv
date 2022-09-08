@@ -1,8 +1,12 @@
+import pytest
+
 from virtualenv.activation import PythonActivator
 from virtualenv.config.cli.parser import VirtualEnvOptions
+from virtualenv.discovery.builtin import get_interpreter
 from virtualenv.run import session_via_cli
 
 
+@pytest.mark.skipif(get_interpreter("2.7", []) is None, reason="No 2.7 interpreter installed")
 def test_python_activator_cross(session_app_data, cross_python, special_name_dir):
     options = VirtualEnvOptions()
     cli_args = [
