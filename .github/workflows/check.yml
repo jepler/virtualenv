@@ -29,6 +29,7 @@ jobs:
           - pypy-3.6-v7.3.3
         os:
           - ubuntu-20.04
+          - ubuntu-22.04
           - macos-12
           - windows-2022
         exclude:
@@ -36,6 +37,8 @@ jobs:
         include:
           - { os: macos-12, py: "brew@3.9" }
           - { os: macos-12, py: "brew@3.8" }
+          - { os: macos-12, py: "brew@3.9" }
+          - { os: ubuntu-22.04, py: "@system" }
     steps:
       - name: Install OS dependencies
         run: |
@@ -53,10 +56,12 @@ jobs:
           done
           exit 1
         shell: bash
-      - name: Setup python for tox
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+###       - name: Setup python for tox
+###         uses: actions/setup-python@v4
+###         with:
+###           python-version: "3.10"
+###           update-environment: false
+###           id: py310
       - name: Install Python 2 for cross test
         uses: actions/setup-python@v4
         with:
@@ -70,7 +75,7 @@ jobs:
           echo "/usr/local/opt/python@$PY/libexec/bin" >>"${GITHUB_PATH}"
         shell: bash
       - name: Setup python for test ${{ matrix.py }}
-        if: "!( startsWith(matrix.py,'brew@') || endsWith(matrix.py, '-dev') )"
+        if: "!( contains(matrix.py, '@') || endsWith(matrix.py, '-dev') )"
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.py }}
