@@ -63,7 +63,7 @@ jobs:
 ###           update-environment: false
 ###           id: py310
       - name: Install Python 2 for cross test
-        if: "os != 'ubuntu-22.04'"
+        if: "matrix.os != 'ubuntu-22.04'"
         uses: actions/setup-python@v4
         with:
           python-version: "2.7"
