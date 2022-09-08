@@ -34,6 +34,7 @@ jobs:
           - windows-2022
         exclude:
           - { os: macos-12, py: "pypy-3.6-v7.3.3" } # PyPy 3.6 does not support macOS 11/12
+          - { os: ubuntu-22.04, py: "3.6" } # Python 3.6 does not support Ubuntu 22.04
         include:
           - { os: macos-12, py: "brew@3.9" }
           - { os: macos-12, py: "brew@3.8" }
@@ -107,6 +108,19 @@ jobs:
         run: |
           import os; import sys
           os.rename(f".tox/.coverage.{os.environ['TOXENV']}", f".tox/.coverage.{os.environ['TOXENV']}-{sys.platform}")
+        shell: python
+      - name: upgrade setuptools to latest
+        run: pip install -U setuptools
+      - name: Run test suite
+        run: tox --skip-pkg-install
+        env:
+          PYTEST_ADDOPTS: "-vv --durations=20"
+          CI_RUN: "yes"
+          DIFF_AGAINST: HEAD
+      - name: Rename coverage report file
+        run: |
+          import os; import sys
+          os.rename(f".tox/.coverage.{os.environ['TOXENV']}", f".tox/.coverage.{os.environ['TOXENV']}-{sys.platform}-new-setuptools")
         shell: python
       - name: Upload coverage data
         uses: actions/upload-artifact@v3
