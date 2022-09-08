@@ -319,6 +319,7 @@ def test_prompt_set(tmp_path, creator, prompt):
             assert cfg["prompt"] == actual_prompt
 
 
+@pytest.mark.skipif(get_interpreter("2.7", []) is None, reason="No 2.7 interpreter installed")
 @pytest.mark.slow()
 @pytest.mark.usefixtures("current_fastest")
 def test_cross_major(cross_python, coverage_env, tmp_path, session_app_data):
